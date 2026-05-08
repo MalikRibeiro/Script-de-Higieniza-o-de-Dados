@@ -1,7 +1,7 @@
 import os
 
-pasta = r'C:\Users\malik.mourad\Downloads\SUM001_2026_02_CONTABILIZACAO'
-sufixo = 'SUM001_fev_26'
+pasta = r'C:\Users\malik.mourad\Downloads\SUM001_2026_03_CONTABILIZACAO'
+sufixo = 'SUM001_mar_26'
 
 for nome_arquivo in os.listdir(pasta):
     if nome_arquivo.endswith('.pdf') and nome_arquivo.startswith('SUM001_Sumario_'):

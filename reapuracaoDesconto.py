@@ -91,23 +91,20 @@ if __name__ == "__main__":
 
     # Lista de eventos (ano, mês, texto_evento)
     EVENTOS = [
-        (2013, 11, "13ª REAPURAÇÃO DE DESCONTO"),
-        (2013, 12, "13ª REAPURAÇÃO DE DESCONTO"),
-        (2014, 2,  "13ª REAPURAÇÃO DE DESCONTO"),
-        (2015, 2,  "20ª REAPURAÇÃO DE DESCONTO"),
-        (2016, 2,  "18ª REAPURAÇÃO DE DESCONTO"),
-        (2017, 2,  "16ª REAPURAÇÃO DE DESCONTO"),
-        (2018, 2,  "10ª REAPURAÇÃO DE DESCONTO"),
-        (2019, 2,  "07ª REAPURAÇÃO DE DESCONTO"),
-        (2020, 2,  "06ª REAPURAÇÃO DE DESCONTO"),
-        (2021, 2,  "09ª REAPURAÇÃO DE DESCONTO"),
-        (2023, 11, "03ª REAPURAÇÃO DE DESCONTO"),
-        (2023, 12, "05ª REAPURAÇÃO DE DESCONTO"),
-        (2024, 1,  "05ª REAPURAÇÃO DE DESCONTO"),
-        (2024, 2,  "04ª REAPURAÇÃO DE DESCONTO"),
-        (2025, 1,  "03ª REAPURAÇÃO DE DESCONTO"),
-        (2025, 2,  "02ª REAPURAÇÃO DE DESCONTO"),
-        (2025, 10,  "01ª REAPURAÇÃO DE DESCONTO"),
+        (2014, 3, "13ª REAPURAÇÃO DE DESCONTO"),
+        (2015, 3, "20ª REAPURAÇÃO DE DESCONTO"),
+        (2016, 3, "17ª REAPURAÇÃO DE DESCONTO"),
+        (2017, 3, "16ª REAPURAÇÃO DE DESCONTO"),
+        (2018, 3, "11ª REAPURAÇÃO DE DESCONTO"),
+        (2019, 3, "06ª REAPURAÇÃO DE DESCONTO"),
+        (2020, 3, "06ª REAPURAÇÃO DE DESCONTO"),
+        (2021, 3, "08ª REAPURAÇÃO DE DESCONTO"),
+        (2024, 3, "04ª REAPURAÇÃO DE DESCONTO"),
+        (2024, 4, "04ª REAPURAÇÃO DE DESCONTO"),
+        (2024, 5, "04ª REAPURAÇÃO DE DESCONTO"),
+        (2024, 6, "04ª REAPURAÇÃO DE DESCONTO"),
+        (2025, 3, "02ª REAPURAÇÃO DE DESCONTO"),
+        (2025, 11, "01ª REAPURAÇÃO DE DESCONTO"),
     ]
 
     # Relatórios (caso queira mudar a lista)
@@ -127,3 +124,4 @@ if __name__ == "__main__":
         dry_run=DRY_RUN
     )
     print("\n=== FINALIZADO ===\n")
+

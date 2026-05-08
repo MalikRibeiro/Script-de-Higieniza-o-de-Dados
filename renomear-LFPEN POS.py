@@ -1,7 +1,8 @@
 import os
 
-pasta = r'C:\Users\malik.mourad\Downloads\LFPEN001_2026_03_LIQUIDACAO_DE_PENALIDADES'
-sufixo = 'LFPEN001_mar_26 (pós)'
+pasta = r'C:\Users\malik.mourad\Downloads\LFPEN001_2026_04_LIQUIDACAO_DE_PENALIDADES'
+sufixo = 'LFPEN001_abr_26'
+
 
 for nome_arquivo in os.listdir(pasta):
     if nome_arquivo.endswith('.pdf'):

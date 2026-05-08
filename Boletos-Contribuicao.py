@@ -1,0 +1,160 @@
+import os
+import re
+
+# ── CONFIGURAÇÃO ──────────────────────────────────────────────────────────────
+pasta = r'C:\Users\malik.mourad\Downloads\CONTRIBUICAO_CCEE_2026_05'
+sufixo = 'CONTRIBUIÇÃO_CCEE_mai.26'
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Mapeamento CNPJ → nome da empresa (para arquivos no formato CNPJ_NOME_ID.pdf)
+CNPJ_MAP = {
+    '061854147000133': 'ACE_SCHMERSAL',
+    '011325407000105': 'ADESI_CL_514',
+    '002597043000121': 'AMERICAS_CL_514',
+    '011224676000347': 'AMG_BRASIL_ENERGIA',
+    '011224676000185': 'AMG_BRASIL_MINERAIS_CRITICOS_C',
+    '004416098000113': 'AOI_YAMA_CL_514',
+    '042419150000184': 'APOLO_TUBULARS',
+    '055560074000174': 'APUCARANINHA',
+    '010887398000183': 'ARBHORES_COMPENSADOS_CL_514',
+    '083310441002756': 'AURORA_FASGO_CL',
+    '083310441000117': 'AURORA_MATRIZ',
+    '083310441006662': 'AURORA_XAXIM',
+    '008696648000156': 'BME_ENERGIA',
+    '077863223000107': 'C_VALE_COOP_AGROINDUSTRIAL',
+    '077863223017930': 'C_VALE_ENERGIA',
+    '002393767000153': 'CAL_CUIABA',
+    '087548814000143': 'CARRARO',
+    '097081434000103': 'CERMISSOES',
+    '085937290000157': 'CERSAD_GERADORA',
+    '007801099000170': 'CERT',
+    '097839922000129': 'CERTAJA',
+    '098042963000152': 'CERTHIL_DISTRIBUICAO',
+    '005042517000167': 'CGH_CRISTALINO',
+    '012278190000192': 'CGH_DALBA',
+    '019280354000165': 'CGH_DONA_MARIA_PIANA',
+    '005311754000186': 'CGH_FAXINAL_DOS_GUEDES',
+    '055560343000100': 'CHAMINE',
+    '055559996000161': 'CHOPIM_1_ESP',
+    '043461698000155': 'CIFA_CL_514',
+    '007659489000157': 'CONTESTADO',
+    '033881227000142': 'CONTINENTAL_COM',
+    '083305235000119': 'COOPERALFA',
+    '008925309000102': 'COOPERLUZ',
+    '095824322000161': 'COOPERLUZ_DIST',
+    '007659452000129': 'CORONEL_ARAUJO',
+    '011192351000168': 'CRERAL',
+    '089435598000155': 'CRERAL_DIST',
+    '077863223004366': 'CVALE',
+    '008270140000191': 'DETOFOL',
+    '061086336014406': 'DIVISAO_WALITA_CL_514',
+    '057501207000167': 'DURA_AUTO_CL_514',
+    '020533523000100': 'ELECTRA_ENERGIA_DIGITAL',
+    '004518259000180': 'ELECTRA_ENERGY',
+    '009188703000160': 'EMBAUBA',
+    '061410395000195': 'FIBAM',
+    '076204130000108': 'FOSPAR',
+    '055560129000146': 'GUARICANA_I5',
+    '004854278000187': 'ISOELECTRIC_L',
+    '004971987000142': 'ITAGUACU',
+    '008543477000125': 'LAJEADO',
+    '080727720000192': 'LEARDINI',
+    '075047498000147': 'MABU_HOTEIS',
+    '011659958000105': 'MACPET_CL_514',
+    '002173216000184': 'MARCEGAGLIA',
+    '005552102000133': 'MARINI_COMPENSADOS',
+    '056990526000110': 'MARTINREA_CL_514',
+    '055560083000165': 'CGH_MARUMBI_ESP',
+    '007004149000198': 'MAUE',
+    '061082962000121': 'MELHORAMENTOS_NP',
+    '055560051000160': 'MELISSA_ESP_PI',
+    '061299178000170': 'MET_CARTEC_CL_514',
+    '002759989000147': 'MET_VOIGT',
+    '055560322000187': 'PALMAS',
+    '014867538000102': 'PARQUE',
+    '008022479000179': 'PASSO_FERRAZ',
+    '007852914000120': 'PCH_-_ZECA_GOLIN',
+    '022343394000113': 'PCH_BARRA_DAS_AGUAS',
+    '004547015000125': 'PCH_BURITI',
+    '009188708000192': 'PCH_CAMBARA',
+    '003149173000164': 'PCH_FERRADURA',
+    '011491496000160': 'PCH_ITAPOCUZINHO_IIA',
+    '006171774000161': 'PCH_NOVA_FATIMA',
+    '004019594000133': 'PCH_PESQUEIRO',
+    '007861587000172': 'PCH_PONTE_BRANCA',
+    '008140348000196': 'PCH_QUEBRA_DENTES',
+    '005632896000145': 'PCH_RIO_INDIOS',
+    '008147946000197': 'PCH_SALTO_DO_GUASSUPI',
+    '005081798000167': 'PCH_TAMBAU',
+    '077282002000145': 'PEDREIRA_INGA',
+    '008252092000109': 'PEQUI_I5',
+    '055560125000168': 'PITANGUI_ESP_PI',
+    '005108075000104': 'PLANTI_CENTER',
+    '081472243000124': 'PLASTBEL',
+    '008147388000160': 'RINCAO_DOS_ALBINOS',
+    '008147432000131': 'RINCAO_SAO_MIGUEL',
+    '007809716000183': 'RIO_BONITO_ENERGIA',
+    '004544111000110': 'SALTO_DO_TIMBO',
+    '055579878000115': 'SALTO_DO_VAU_I5',
+    '055560181000100': 'SAO_JORGE_ESPECIAL',
+    '005495137000188': 'SJHOTEIS',
+    '008252113000196': 'SUCUPIRA',
+    '080052657000131': 'THERMOPLAST_CL_514',
+    '010435853000100': 'TIMBER_CL_514',
+    '005646253000150': 'USINAS_DO_PRATA',
+    '002460988000105': 'UTE_GOIANESIA',
+    '061082962000474': 'UTE_NOVA_LONDRINA',
+    '077948750000114': 'VIDROLAR_CL_514',
+    '014724412000189': 'VITORINO',
+    '077917680005104': 'ZAELI_CL_514',
+    '006209559000102': 'MAZURKY_IND',
+    '055559992000183': 'CAVERNOSO_I',
+    '055560187000170': 'CAVERNOSO_II',
+    '026299367000141': 'SPUNFLEX_AS_INDUSTRIA_DE_PLASTICOS',
+    '077965077000120': 'PLASTICOS_DO_PARANA_LTDA',
+    '009367501000185': 'ALIANCA_ARTEFATOS_DE_METAIS',
+    '079922720000164': 'FERRAMENTARIA_JN_LTDA'
+}
+
+# Regex: 15 dígitos + _ + qualquer texto + _ + ID numérico no final
+PADRAO_CNPJ = re.compile(r'^(\d{15})_[A-Z0-9]+_\d+\.pdf$', re.IGNORECASE)
+
+renomeados = 0
+ignorados  = 0
+
+for nome_arquivo in sorted(os.listdir(pasta)):
+    if not nome_arquivo.lower().endswith('.pdf'):
+        continue
+
+    caminho_antigo = os.path.join(pasta, nome_arquivo)
+    novo_nome = None
+
+    # Caso 1 — arquivo com prefixo CNPJ (ex: 009367501000185_ALIANCAARTEFATOS_996698954.pdf)
+    match = PADRAO_CNPJ.match(nome_arquivo)
+    if match:
+        cnpj = match.group(1)
+        if cnpj in CNPJ_MAP:
+            novo_nome = f'{CNPJ_MAP[cnpj]}_{sufixo}.pdf'
+        else:
+            print(f'[CNPJ NÃO MAPEADO] {nome_arquivo} (CNPJ: {cnpj})')
+            ignorados += 1
+            continue
+
+    # Caso 2 — arquivo já no formato padrão mas com espaços
+    # ex: "CERTAJA CONTRIBUIÇÃO_CCEE abr.26.pdf" → "CERTAJA_CONTRIBUIÇÃO_CCEE_abr.26.pdf"
+    else:
+        nome_sem_ext = nome_arquivo.replace('.pdf', '')
+        nome_normalizado = nome_sem_ext.replace(' ', '_')
+        if nome_normalizado != nome_sem_ext:  # só renomeia se tiver espaços
+            novo_nome = f'{nome_normalizado}.pdf'
+
+    if novo_nome:
+        caminho_novo = os.path.join(pasta, novo_nome)
+        os.rename(caminho_antigo, caminho_novo)
+        print(f'[OK] {nome_arquivo}')
+        print(f'  -> {novo_nome}')
+        renomeados += 1
+
+print()
+print(f'Renomeados : {renomeados}')
+print(f'Ignorados  : {ignorados}')

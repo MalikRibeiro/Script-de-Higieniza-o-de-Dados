@@ -1,14 +1,14 @@
 import os
 
 # Caminho da pasta
-pasta = r"C:\Users\malik.mourad\ELECTRA COMERCIALIZADORA DE ENERGIA S.A\GE - ECE\DGCA\DGA\CCEE\Relatórios CCEE\2026\202601\Liquidação de Penalidades\LFPEN001"
+pasta = r"C:\Users\malik.mourad\ELECTRA COMERCIALIZADORA DE ENERGIA S.A\GE - ECE\DGCA\DGA\CCEE\Boletos Bancários - Contribuição\2026\202604"
 
 # Lista todos os arquivos na pasta
 for arquivo in os.listdir(pasta):
     # Verifica se é um arquivo (não uma subpasta)
     if os.path.isfile(os.path.join(pasta, arquivo)):
-        # Substitui 12 por dez
-        novo_nome = arquivo.replace(" (pós)", "")
+        # Substitui espaços por underscores
+        novo_nome = arquivo.replace(" ", "_")
         # Corrige o sufixo _pdf para .pdf
         if novo_nome.endswith("_pdf"):
             novo_nome = novo_nome[:-4] + ".pdf"
